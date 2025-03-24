@@ -1,14 +1,14 @@
 import { getTranslations } from "next-intl/server";
 
-export async function generateMetadata() {
-  const t = await getTranslations("About");
-  return {
-    title: t("pageTitle"),
-  };
-}
+// export async function generateMetadata() {
+//   const t = await getTranslations("about");
+//   return {
+//     title: t("pageTitle"),
+//   };
+// }
 
 export default async function AboutPage() {
-  const t = await getTranslations("About");
+  const t = await getTranslations("about");
 
   return (
     <main className="container mx-auto px-4 py-8">

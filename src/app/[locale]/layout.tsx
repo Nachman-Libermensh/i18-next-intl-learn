@@ -11,6 +11,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import LocaleSwitcher from "@/components/LanguageSwitcher";
+import { getServerSession } from "next-auth";
 
 const assistant = Assistant({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -37,7 +38,7 @@ export default async function RootLayout({
 
   // Enable static rendering
   setRequestLocale(locale);
-
+const session = await getServerSession()
   const messages = await getMessages({ locale});
   const t = await getTranslations('navigation');
 console.log(messages);
@@ -59,7 +60,7 @@ console.log(messages);
               <LocaleSwitcher />
             </div>
           </nav>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider session={session}>{children}</AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
