@@ -1,5 +1,4 @@
 "use client";
-import LocaleSwitcher from "@/components/LanguageSwitcher";
 import { Link } from "@/i18n/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -10,22 +9,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <h1 className="text-xl font-semibold">{t("title")}</h1>
-            <Link
-              href="/about"
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              {t("about")}
-            </Link>
-          </div>
-          <LocaleSwitcher />
-        </div>
-      </nav>
-
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto">
