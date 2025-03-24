@@ -5,7 +5,7 @@ import { Assistant } from "next/font/google";
 import "@/app/[locale]/globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -38,33 +38,21 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(locale);
 
-  // טעינת קובץ התרגומים
-  let messages;
-  try {
-    messages = (await import(`../../../messages/${locale}.json`)).default;
-  } catch (error) {
-    notFound();
-  }
-  const t = await getTranslations("Navigation");
+  const messages = await getMessages({ locale});
+  const t = await getTranslations('navigation');
+console.log(messages);
 
   return (
     <html lang={locale} dir={locale === "he" ? "rtl" : "ltr"}>
-      <head>
-        <link rel="icon" href="/Icons/mainLogo.png" sizes="any" />
-      </head>
       <body className={assistant.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {/* Header */}
           <nav className="bg-white shadow-sm">
             <div className="container mx-auto px-4 py-3 flex justify-between items-center">
               <div className="flex items-center gap-6">
-                <Link href={"/"} className="text-xl font-semibold">
+                <Link href="/" className="text-xl font-semibold">
                   {t("home")}
                 </Link>
-                <Link
-                  href="/about"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
+                <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">
                   {t("about")}
                 </Link>
               </div>

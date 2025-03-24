@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 export default function Home() {
   const { data: session } = useSession();
-  const t = useTranslations("HomePage");
+  const t = useTranslations("home"); 
 
   return (
     <main className="min-h-screen bg-gray-50">
