@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Assistant } from "next/font/google";
 
@@ -23,12 +24,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -36,13 +36,21 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(locale);
 
+  // טעינת קובץ התרגומים
+  let messages;
+  try {
+    messages = (await import(`../../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+
   return (
-    <html lang="en">
+    <html lang={locale} dir={locale === "he" ? "rtl" : "ltr"}>
       <head>
         <link rel="icon" href="/Icons/mainLogo.png" sizes="any" />
       </head>
-      <body className={assistant.className} dir="rtl">
-        <NextIntlClientProvider>
+      <body className={assistant.className}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>{children}</AuthProvider>
         </NextIntlClientProvider>
       </body>

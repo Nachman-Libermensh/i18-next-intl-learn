@@ -1,6 +1,19 @@
 {
   "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+    "title": "Home Page",
+    "about": "About",
+    "welcome": "Welcome {name}",
+    "email": "Email: {email}",
+    "status": {
+      "employer": "Status: Employer",
+      "employee": "Status: Employee"
+    },
+    "logout": "Logout",
+    "login": "Login",
+    "pleaseLogin": "Please login to continue"
+  },
+  "LocaleSwitcher": {
+    "switchLocale": "Switch to {locale}",
+    "label": "Change language"
   }
 }

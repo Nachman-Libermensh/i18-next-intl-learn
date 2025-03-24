@@ -1,30 +1,21 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 
-export default function LanguageSwitcher() {
-  const router = useRouter();
+export default function LocaleSwitcher() {
+  const t = useTranslations("LocaleSwitcher");
   const locale = useLocale();
-  const [loading, setLoading] = useState(false);
-
-  const switchLanguage = async (newLocale: string) => {
-    setLoading(true);
-    // שמירת השפה החדשה ב-cookie
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/`;
-    // טעינה מחדש של הדף
-    router.refresh();
-    setLoading(false);
-  };
+  const otherLocale = locale === "en" ? "he" : "en";
+  const pathname = usePathname();
 
   return (
-    <select
-      value={locale}
-      onChange={(e) => switchLanguage(e.target.value)}
-      disabled={loading}
+    <Link
+      href={pathname}
+      locale={otherLocale}
+      className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
     >
-      <option value="he">עברית</option>
-      <option value="en">English</option>
-    </select>
+      {t("switchLocale", {
+        locale: otherLocale === "he" ? "עברית" : "English",
+      })}
+    </Link>
   );
 }
