@@ -1,16 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest } from "next/server";
 import { withAuth } from "next-auth/middleware";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
-export default withAuth;
+const publicPages = [
+  "/",
+  "/login",
+  // (/secret requires auth)
+];
+
+const intlMiddleware = createMiddleware(routing);
+
+const authMiddleware = withAuth(
+  // Note that this callback is only invoked if
+  // the `authorized` callback has returned `true`
+  // and not for pages listed in `pages`.
+  (req) => intlMiddleware(req)
+);
+
+export default function middleware(req: NextRequest) {
+  const publicPathnameRegex = RegExp(
+    `^(/(${routing.locales.join("|")}))?(${publicPages
+      .flatMap((p) => (p === "/" ? ["", "/"] : p))
+      .join("|")})/?$`,
+    "i"
+  );
+  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+
+  if (isPublicPage) {
+    return intlMiddleware(req);
+  } else {
+    return (authMiddleware as any)(req);
+  }
+}
 
 export const config = {
-  matcher: [
-    /*
-     * התאם את כל נתיבי הבקשות למעט אלה המתחילים ב:
-     * - api (נתיבי API)
-     * - _next/static (קבצים סטטיים)
-     * - _next/image (קבצי אופטימיזציית תמונה)
-     * - favicon.ico, sitemap.xml, robots.txt (קבצי מטא-דאטה)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|login|register).*)",
-  ],
+  // Match all pathnames except for
+  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
+  // - … the ones containing a dot (e.g. `favicon.ico`)
+  matcher: ["/((?!api|trpc|_next|_vercel|.*\\..*).*)"],
 };

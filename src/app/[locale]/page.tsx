@@ -1,9 +1,12 @@
 "use client";
+
+import { Link } from "@/i18n/navigation";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
   const { data: session } = useSession();
+  const t = useTranslations("HomePage");
   return (
     <main className="container mx-auto px-4">
       <div className="min-h-screen flex flex-col items-center justify-center">
@@ -40,6 +43,10 @@ export default function Home() {
             </Link>
           </div>
         )}
+      </div>
+      <div>
+        <h1>{t("title")}</h1>
+        <Link href="/about">{t("about")}</Link>
       </div>
     </main>
   );

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Assistant } from "next/font/google";
 
-import "@/app/globals.css";
+import "@/app/[locale]/globals.css";
 import AuthProvider from "@/context/AuthProvider";
+import { NextIntlClientProvider } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 
 const assistant = Assistant({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -16,18 +21,30 @@ export const metadata: Metadata = {
   description: "Learning I18n and Next-Intl.js",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  // Enable static rendering
+  setRequestLocale(locale);
+
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="/Icons/mainLogo.png" sizes="any" />
       </head>
       <body className={assistant.className} dir="rtl">
-        <AuthProvider>{children}</AuthProvider>
+        <NextIntlClientProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
