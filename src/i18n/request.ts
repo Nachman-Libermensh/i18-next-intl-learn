@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "./routing";
@@ -35,3 +36,32 @@ export default getRequestConfig(async ({ requestLocale }) => {
     messages,
   };
 });
+
+const loadMessagesFromDB = async (locale: string, namespace: string) => {
+  try {
+    // First try to load from static files
+    const staticMessages = (await import(`../../messages/${locale}/${namespace}.json`)).default;
+    
+    // Then try to load from API
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/translations/${locale}/${namespace}`,
+      { next: { revalidate: 3600 } }
+    );
+    
+    if (!response.ok) {
+      return staticMessages;
+    }
+    
+    const { translations } = await response.json();
+    
+    // Merge static and dynamic translations
+    return {
+      ...staticMessages,
+      ...translations
+    };
+    
+  } catch (error) {
+    console.error(`Failed to load namespace "${namespace}" for locale "${locale}"`, error);
+    return {};
+  }
+};
