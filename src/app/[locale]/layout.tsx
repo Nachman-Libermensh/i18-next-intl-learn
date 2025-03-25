@@ -24,7 +24,9 @@ export const metadata: Metadata = {
   title: "I18n-Next-Intl-learning",
   description: "Learning I18n and Next-Intl.js",
 };
-
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({locale}));
+} // מיועד בשביל SEO בלבד
 export default async function RootLayout({
   children,
   params: { locale },
@@ -41,7 +43,7 @@ export default async function RootLayout({
 const session = await getServerSession()
   const messages = await getMessages({ locale});
   const t = await getTranslations('navigation');
-console.log(messages);
+// console.log(messages);
 
   return (
     <html lang={locale} dir={locale === "he" ? "rtl" : "ltr"}>

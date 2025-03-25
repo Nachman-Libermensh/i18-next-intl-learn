@@ -4,6 +4,7 @@ import { routing } from "./routing";
 const namespaces = ['common', 'home', 'about', 'navigation'] as const;
 
 const loadNamespaceMessages = async (locale: string, namespace: string) => {
+console.log("loadNamespaceMessages called with locale: ", locale, "namespace: ", namespace);
   try {
     return (await import(`../../messages/${locale}/${namespace}.json`)).default;
   } catch (error) {
@@ -16,7 +17,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const locale = hasLocale(routing.locales, requested)
     ? requested
     : routing.defaultLocale;
-
+console.log("getRequestConfig called with requested: ", requested, "locale: ", locale);
   // Load all namespace messages in parallel
   const namespacesMessages = await Promise.all(
     namespaces.map(async (namespace) => ({
