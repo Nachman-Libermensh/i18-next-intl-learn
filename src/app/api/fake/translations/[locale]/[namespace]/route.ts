@@ -1,4 +1,10 @@
-const mockTranslations = {
+import { NextResponse } from 'next/server';
+
+type Locale = 'he' | 'en';
+type Namespace = 'home' | 'about';
+type TranslationValue = string | { [key: string]: string | TranslationValue };
+
+const mockTranslations: Record<Locale, Record<Namespace, TranslationValue>> = {
   he: {
     home: {
       title: "דף הבית",
@@ -29,14 +35,12 @@ const mockTranslations = {
   }
 };
 
-// Simulate DB delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function fetchTranslations(locale: string, namespace: string) {
   await delay(500); // Simulate network delay
-  return mockTranslations[locale]?.[namespace] ?? {};
+  return mockTranslations[locale as Locale]?.[namespace as Namespace] ?? {};
 }
-import { NextResponse } from 'next/server';
 
 // export const runtime = 'edge';
 // export const revalidate = 3600; // Cache for 1 hour
@@ -54,7 +58,7 @@ export async function GET(
     });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch translations' },
+      { message: 'Failed to fetch translations', error },
       { status: 500 }
     );
   }
