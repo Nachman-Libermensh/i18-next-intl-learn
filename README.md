@@ -100,7 +100,7 @@ This will generate static paths for all languages, improving SEO. If you have is
 
 - [Next.js](https://nextjs.org) - React framework
 - [next-intl](https://next-intl-docs.vercel.app/) - Internationalization library
-- [React](https://reactjs.org) - UI library
+
 
 ## Useful Links
 
@@ -216,7 +216,6 @@ export function generateStaticParams() {
 
 - [Next.js](https://nextjs.org) - פריימוורק React
 - [next-intl](https://next-intl-docs.vercel.app/) - ספריית בינלאומיות
-- [React](https://reactjs.org) - ספריית UI
 
 ## קישורים שימושיים
 
